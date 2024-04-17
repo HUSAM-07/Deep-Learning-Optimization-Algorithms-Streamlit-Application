@@ -59,7 +59,7 @@ def transform_image(image):
 
 
 
-@st.cache
+@st.cache_data
 def initiate_model():
 
     # Initiate model
