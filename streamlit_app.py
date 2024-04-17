@@ -124,22 +124,25 @@ def digit_recognizer_page():
                 del img_gray, image_transformed , class_label, confidence, df
 
 # Train Model Page
+# Train Model Page
 def train_model_page():
     st.title("Deep Learning Optimization Algorithms")
 
-    st.sidebar.header("Train Model")
-    n_epochs = st.sidebar.slider("Number of Epochs", 1, 50, 20)
-    learning_rate = st.sidebar.slider("Learning Rate", 0.001, 0.1, 0.01)
-    optimizer_type = st.sidebar.selectbox("Optimizer", ["SGD", "Adam"])
+    st.subheader("Train Model")
+    n_epochs = st.slider("Number of Epochs", 1, 50, 20)
+    learning_rate = st.slider("Learning Rate", 0.001, 0.1, 0.01)
+    optimizer_type = st.selectbox("Optimizer", ["SGD", "Adam"])
 
-    if st.sidebar.button("Train"):
+    if st.button("Train Model"):
         train_model(n_epochs, learning_rate, optimizer_type)
 
-    st.sidebar.header("Test Model")
-    test_count = st.sidebar.slider("Number of Test Samples", 1, 20, 10)
+    st.subheader("Test Model")
+    test_count = st.slider("Number of Test Samples", 1, 20, 10)
 
-    if st.sidebar.button("Test"):
+    if st.button("Test Model"):
         test_model(test_count)
+
+
 
 
 # Back-end
