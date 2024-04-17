@@ -18,7 +18,7 @@ def main():
         learning_rate = st.slider("Learning Rate", 0.001, 0.1, 0.01)
         optimizer_type = st.selectbox("Optimizer", ["SGD", "Adam"])
 
-        st.button("Train"):
+        st.button("Train")
         train_model(n_epochs, learning_rate, optimizer_type)
         st.form_submit_button()
 
