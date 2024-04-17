@@ -1,9 +1,8 @@
-
 import streamlit as st
 import torch
 import torch.nn as nn
 from torch.optim import SGD, Adam
-from torch.utils.data import DataLoader, RandomSampler
+from torch.utils.data import DataLoader
 import numpy as np
 import matplotlib.pyplot as plt
 from torchvision import datasets, transforms
@@ -18,16 +17,8 @@ def main():
         learning_rate = st.slider("Learning Rate", 0.001, 0.1, 0.01)
         optimizer_type = st.selectbox("Optimizer", ["SGD", "Adam"])
 
-        st.button("Train")
-        train_model(n_epochs, learning_rate, optimizer_type)
-        st.form_submit_button()
-
-        #st.header("Test Model")
-        #test_count = st.slider("Number of Test Samples", 1, 20, 10)
-
-        #if st.button("Test"):
-            #test_model(test_count)
-
+        if st.form_submit_button("Train"):
+            train_model(n_epochs, learning_rate, optimizer_type)
 
 # Back-end
 class CTDataset(torch.utils.data.Dataset):
@@ -114,28 +105,6 @@ def test_model_accuracy():
 
     accuracy = accuracy_score(target_list, predicted_list)
     return accuracy
-
-
-def test_model(test_count):
-    test_loader = DataLoader(CTDataset(train=False), batch_size=1, shuffle=True)
-    model = MyNeuralNet()
-    model.eval()
-
-    cols = 4
-    rows = int(np.ceil(test_count / cols))
-    fig, ax = plt.subplots(rows, cols, figsize=(10, 5))
-    for i, (data, target) in enumerate(test_loader):
-        if i == test_count:
-            break
-        output = model(data)
-        _, predicted = torch.max(output, 1)
-        image = data.squeeze().numpy()
-        ax[i // cols, i % cols].imshow(image, cmap='gray')
-        ax[i // cols, i % cols].set_title(f'Predicted: {predicted.item()}, Actual: {target.item()}')
-        ax[i // cols, i % cols].axis('off')
-
-    plt.tight_layout()
-    st.pyplot(fig)
 
 
 if __name__ == "__main__":
