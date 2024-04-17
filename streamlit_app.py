@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader, RandomSampler
 import numpy as np
 import matplotlib.pyplot as plt
 from torchvision import datasets, transforms
-from scikit-learn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score
 from streamlit_drawable_canvas import st_canvas
 import cv2
 import torch
