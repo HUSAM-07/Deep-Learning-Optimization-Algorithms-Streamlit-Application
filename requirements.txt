@@ -5,3 +5,6 @@ pandas
 plotly
 scikit-learn
 matplotlib
+torchvision
+streamlit-drawable-canvas==0.7.0
+
