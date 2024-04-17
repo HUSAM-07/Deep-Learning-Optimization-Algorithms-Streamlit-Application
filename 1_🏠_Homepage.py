@@ -30,7 +30,7 @@ def main():
 
 # Back-end
 class CTDataset(torch.utils.data.Dataset):
-    def __init__(self, train=True, num_samples=1000):  # Add num_samples parameter
+    def __init__(self, train=True, num_samples=1000):  
         self.transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
         self.dataset = datasets.MNIST(root='./MNIST/processed', train=train, transform=self.transform, download=True)
 
@@ -99,7 +99,7 @@ def train_model(n_epochs, learning_rate, optimizer_type):
 
 
 def test_model_accuracy():
-    test_loader = DataLoader(CTDataset(train=False), batch_size=1, shuffle=True)
+    test_loader = DataLoader(CTDataset(train=False), batch_size=1, shuffle=False)
     model = MyNeuralNet()
     model.eval()
 
