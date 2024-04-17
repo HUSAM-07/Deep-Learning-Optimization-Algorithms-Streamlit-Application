@@ -21,11 +21,11 @@ def main():
         if st.button("Train"):
             train_model(n_epochs, learning_rate, optimizer_type)
 
-        st.header("Test Model")
-        test_count = st.slider("Number of Test Samples", 1, 20, 10)
+        #st.header("Test Model")
+        #test_count = st.slider("Number of Test Samples", 1, 20, 10)
 
-        if st.button("Test"):
-            test_model(test_count)
+        #if st.button("Test"):
+            #test_model(test_count)
 
 
 # Back-end
