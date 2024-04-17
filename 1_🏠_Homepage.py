@@ -13,7 +13,7 @@ from sklearn.metrics import accuracy_score
 def main():
     st.title("Deep Learning Optimization Algorithms")
 
-    with st.form("Train Model")
+    with st.form("Train Model"):
         n_epochs = st.slider("Number of Epochs", 1, 50, 20)
         learning_rate = st.slider("Learning Rate", 0.001, 0.1, 0.01)
         optimizer_type = st.selectbox("Optimizer", ["SGD", "Adam"])
