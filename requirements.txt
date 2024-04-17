@@ -6,3 +6,4 @@ torch
 streamlit-drawable-canvas==0.7.0
 torchvision
 opencv-python
+scikit-learn
