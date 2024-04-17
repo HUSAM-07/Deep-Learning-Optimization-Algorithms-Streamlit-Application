@@ -123,6 +123,7 @@ def digit_recognizer_page():
                 plot_fig(df)
                 del img_gray, image_transformed , class_label, confidence, df
 
+# Train Model Page
 def train_model_page():
     st.title("Deep Learning Optimization Algorithms")
 
@@ -140,17 +141,21 @@ def train_model_page():
     if st.sidebar.button("Test"):
         test_model(test_count)
 
+
 # Back-end
 class CTDataset(torch.utils.data.Dataset):
-    def __init__(self, train=True):
+    def __init__(self, train=True, num_train_images=1000):
         self.transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
         self.dataset = datasets.MNIST(root='./MNIST/processed', train=train, transform=self.transform, download=True)
+        if train:
+            self.dataset = self.dataset[:num_train_images]
 
     def __len__(self):
         return len(self.dataset)
 
     def __getitem__(self, idx):
         return self.dataset[idx]
+
 
 class MyNeuralNet(nn.Module):
     def __init__(self):
@@ -169,6 +174,7 @@ class MyNeuralNet(nn.Module):
         x = self.flatten(x)
         logits = self.linear_relu_stack(x)
         return logits
+
 
 def train_model(n_epochs, learning_rate, optimizer_type):
     train_loader = DataLoader(CTDataset(train=True), batch_size=64, shuffle=True)
@@ -202,14 +208,13 @@ def train_model(n_epochs, learning_rate, optimizer_type):
     plt.title('Accuracy vs Epoch')
     st.pyplot()
 
+
 def test_model_accuracy():
     test_loader = DataLoader(CTDataset(train=False), batch_size=1, shuffle=True)
     model = MyNeuralNet()
     model.eval()
 
-    predicted
-
-
+    predicted_list = []
     target_list = []
     for data, target in test_loader:
         output = model(data)
@@ -219,6 +224,7 @@ def test_model_accuracy():
 
     accuracy = accuracy_score(target_list, predicted_list)
     return accuracy
+
 
 def test_model(test_count):
     test_loader = DataLoader(CTDataset(train=False), batch_size=1, shuffle=True)
@@ -241,66 +247,5 @@ def test_model(test_count):
     plt.tight_layout()
     st.pyplot(fig)
 
-class ResNet8(nn.Module):
-    def __init__(self, in_channels, num_classes):
-        super().__init__()
-        # 1 x 28 x 28
-        self.conv1 = conv_block(in_channels, 64) # 64 x 28 x 28
-        self.conv2 = conv_block(64, 128, pool=True) # 128 x 14 x 14
-        self.res1 = nn.Sequential(conv_block(128, 128), 
-                                  conv_block(128, 128)) # 128 x 14 x 14
-        
-        self.conv3 = conv_block(128, 256, pool=True)  # 256 x 7 x 7
-        self.res2 = nn.Sequential(conv_block(256, 256), 
-                                  conv_block(256, 256)) # 256 x 7 x 7
-        
-        self.classifier = nn.Sequential(nn.MaxPool2d(7),  # 256 x 1 x 1 since maxpool with 7x7
-                                        nn.Flatten(),    # 256*1*1 
-                                        nn.Dropout(0.2),
-                                        nn.Linear(256, num_classes))
-        
-    def forward(self, xb):
-        out = self.conv1(xb)
-        out = self.conv2(out)
-        out = self.res1(out) + out
-        out = self.conv3(out)
-        out = self.res2(out) + out
-        out = self.classifier(out)
-        return out
-
-def transform_image(image):
-    stats = ((0.1307), (0.3081))
-    my_transforms = T.Compose([
-        T.ToTensor(),
-        T.Normalize(*stats)
-    ])
-
-    return my_transforms(image)
-
-@st.cache
-def initiate_model():
-    # Initiate model
-    in_channels = 1
-    num_classes = 10
-    model = ResNet8(in_channels, num_classes)
-    device = torch.device('cpu')
-    PATH = 'mnist-resnet.pth'
-    model.load_state_dict(torch.load(PATH, map_location=device))
-    model.eval()
-    return model
-
-def predict_image(img):
-    # Convert to a batch of 1
-    xb = img.unsqueeze(0)
-    model = initiate_model()
-    # Get predictions from model
-    yb = model(xb)
-    # apply softmax
-    yb_soft = F.softmax(yb, dim=1)
-    # Pick index with highest probability
-    confidence , preds  = torch.max(yb_soft, dim=1)
-    # Retrieve the class label, confidence, and probabilities of all classes using sigmoid 
-    return preds[0].item(), math.trunc(confidence.item()*100), torch.sigmoid(yb).detach()
-
 if __name__ == "__main__":
-    main()
+    train_model_page()
