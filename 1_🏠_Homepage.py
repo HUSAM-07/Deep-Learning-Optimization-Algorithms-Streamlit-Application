@@ -30,15 +30,20 @@ def main():
 
 # Back-end
 class CTDataset(torch.utils.data.Dataset):
-    def __init__(self, train=True):
+    def __init__(self, train=True, num_samples=1000):  # Add num_samples parameter
         self.transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
         self.dataset = datasets.MNIST(root='./MNIST/processed', train=train, transform=self.transform, download=True)
+
+        # Keep only num_samples for training
+        if train:
+            self.dataset = torch.utils.data.Subset(self.dataset, range(num_samples))
 
     def __len__(self):
         return len(self.dataset)
 
     def __getitem__(self, idx):
         return self.dataset[idx]
+
 
 
 class MyNeuralNet(nn.Module):
@@ -61,7 +66,7 @@ class MyNeuralNet(nn.Module):
 
 
 def train_model(n_epochs, learning_rate, optimizer_type):
-    train_loader = DataLoader(CTDataset(train=True), batch_size=64, shuffle=True)
+    train_loader = DataLoader(CTDataset(train=True, num_samples=1000), batch_size=64, shuffle=True)
     model = MyNeuralNet()
     criterion = nn.CrossEntropyLoss()
     
