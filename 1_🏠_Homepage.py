@@ -22,7 +22,7 @@ def main():
 
 # Back-end
 class CTDataset(torch.utils.data.Dataset):
-    def __init__(self, train=True, num_samples=1000):  
+    def __init__(self, train=True, num_samples=100):  
         self.transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
         self.dataset = datasets.MNIST(root='./MNIST/processed', train=train, transform=self.transform, download=True)
 
@@ -43,11 +43,11 @@ class MyNeuralNet(nn.Module):
         super().__init__()
         self.flatten = nn.Flatten()
         self.linear_relu_stack = nn.Sequential(
-            nn.Linear(28*28, 512),
+            nn.Linear(28*28, 100),
             nn.ReLU(),
-            nn.Linear(512, 512),
-            nn.ReLU(),
-            nn.Linear(512, 10),
+            #nn.Linear(512, 512),
+            #nn.ReLU(),
+            nn.Linear(100, 10),
             nn.ReLU()
         )
 
